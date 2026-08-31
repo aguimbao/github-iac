@@ -1,0 +1,7 @@
+node_modules/
+dist/
+.pulumi/
+.env
+*.local
+.mise.local.toml
+fnox.*.toml

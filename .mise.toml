@@ -1,0 +1,83 @@
+[tools]
+'aqua:nushell/nushell' = '0.115.1'
+'aqua:protonpass/pass-cli' = '2.3.3'
+fnox = '1.34.1'
+pulumi = '3.260.0'
+node = '24.20.0'
+bun = '1.4.0'
+hk = { version = '1.57.0', postinstall = 'hk install' }
+actionlint = '1.7.12'
+hadolint = '2.15.1'
+'aqua:nektos/act' = '0.2.89'
+'aqua:biomejs/biome' = '2.5.11'
+'aqua:zizmorcore/zizmor' = '1.30.0'
+'aqua:crate-ci/typos' = '1.50.0'
+'npm:tombi' = '1.5.0'
+'npm:@commitlint/cli' = '21.2.2'
+'npm:renovate' = { version = '44.52.1', bun_args = '--trust' }
+'npm:@devcontainers/cli' = '0.88.0'
+markdownlint-cli2 = '0.23.2'
+yamllint = '1.38.0'
+pkl = '0.32.1'
+
+[settings]
+minimum_release_age = '0'
+npm.package_manager = 'bun'
+
+[tasks.setup]
+description = 'Install toolchains and dependencies. Pass --pass-cli-login to log into Proton Pass.'
+shell = 'nu -c'
+usage = '''
+flag "-p --pass-cli-login" help="Log in to Proton Pass via pass-cli"
+'''
+run = '''
+mise install node bun
+mise install
+bun install
+
+let do_login = (($env.usage_pass_cli_login? | default "false") == "true")
+if $do_login {
+  if (pass-cli info | complete | get exit_code) != 0 {
+    pass-cli login
+  }
+}
+'''
+
+[tasks.lint]
+description = 'Run all code quality checks via hk'
+run = 'fnox exec -- hk check --all'
+
+[tasks.fmt]
+description = 'Fix formatting and linting errors via hk'
+run = 'fnox exec -- hk fix --all'
+
+[tasks.preview]
+description = 'Preview Pulumi infrastructure changes'
+run = 'fnox exec -- pulumi preview'
+
+[tasks.up]
+description = 'Apply Pulumi infrastructure changes'
+run = 'fnox exec -- pulumi up --yes'
+
+[tasks.renovate]
+description = 'Run Renovate dependency updates locally or remotely'
+shell = 'nu -c'
+usage = '''
+flag "-r --remote" help="Run remote Renovate against GitHub repository to open PRs"
+flag "-d --dry-run" help="Perform dry run without modifying repository (requires -r)"
+'''
+run = '''
+let is_remote = (($env.usage_remote? | default "false") == "true")
+let is_dry_run = (($env.usage_dry_run? | default "false") == "true")
+
+if $is_remote {
+  let dry_args = if $is_dry_run { ["--dry-run=full"] } else { [] }
+  fnox exec -- renovate --expose-all-env=true ...$dry_args aguimbao/github-iac
+} else {
+  fnox exec -- renovate --expose-all-env=true --platform=local
+}
+'''
+
+[tasks.ci]
+description = 'Run GitHub Actions workflows locally via act'
+run = 'DOCKER_HOST="${DOCKER_HOST:-unix://${XDG_RUNTIME_DIR:-/run/user/$(id -u)}/podman/podman.sock}" act'

@@ -1,0 +1,94 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:recommended",
+    "docker:pinDigests",
+    "helpers:pinGitHubActionDigests",
+    ":semanticCommits",
+    ":semanticPrefixChore",
+    ":semanticCommitScope(deps)"
+  ],
+  "dependencyDashboard": true,
+  "dependencyDashboardAutoclose": true,
+  "prHourlyLimit": 0,
+  "prConcurrentLimit": 0,
+  "labels": ["dependencies"],
+  "packageRules": [
+    {
+      "matchUpdateTypes": ["minor", "patch", "digest", "pin", "pinDigest"],
+      "automerge": true,
+      "automergeType": "pr",
+      "platformAutomerge": false,
+      "matchPackageNames": ["*"]
+    },
+    {
+      "matchManagers": ["github-actions"],
+      "pinDigests": true
+    }
+  ],
+  "customDatasources": {
+    "apk-wolfi": {
+      "defaultRegistryUrlTemplate": "https://cwaits6.github.io/apk-datasource/x86_64/{{packageName}}.json",
+      "format": "json"
+    }
+  },
+  "customManagers": [
+    {
+      "customType": "regex",
+      "description": "Containerfile base image updater",
+      "managerFilePatterns": ["/(^|/)Containerfile.*$/"],
+      "matchStrings": [
+        "FROM (?<depName>[^:\\s]+):(?<currentValue>[^@\\s]+)(?:@(?<currentDigest>sha256:[a-f0-9]+))?"
+      ],
+      "datasourceTemplate": "docker"
+    },
+    {
+      "customType": "regex",
+      "description": "Wolfi apk package updater",
+      "managerFilePatterns": [
+        "/(^|/)(?:\\.?devcontainer/)?(?:Dockerfile|Containerfile).*$/",
+        "/(^|/)Containerfile.*$/"
+      ],
+      "matchStringsStrategy": "recursive",
+      "matchStrings": [
+        "apk\\s+add[^\\n\\\\]*(?:\\\\[^\\S\\n]*\\n[^\\n\\\\]*)*",
+        "(?<depName>[a-zA-Z0-9][a-zA-Z0-9._+-]*)=(?<currentValue>[0-9][^\\s\\\\]+)"
+      ],
+      "datasourceTemplate": "custom.apk-wolfi",
+      "versioningTemplate": "loose"
+    },
+    {
+      "customType": "regex",
+      "description": "Act runner image updater",
+      "managerFilePatterns": ["/(^|/)\\.actrc$/"],
+      "matchStrings": [
+        "-P\\s+[a-zA-Z0-9._-]+=(?<depName>[^:\\s]+):(?<currentValue>[^@\\s]+)(?:@(?<currentDigest>sha256:[a-f0-9]+))?"
+      ],
+      "datasourceTemplate": "docker"
+    },
+    {
+      "customType": "regex",
+      "description": "hk.pkl package version updater",
+      "managerFilePatterns": ["/(^|/)hk\\.pkl$/"],
+      "matchStrings": [
+        "package://github\\.com/(?<depName>jdx/hk)/releases/download/v(?<currentValue>[^/]+)/hk@(?<currentVersion>[^#]+)#/"
+      ],
+      "datasourceTemplate": "github-releases"
+    },
+    {
+      "customType": "regex",
+      "description": "Mise CLI binary updater",
+      "managerFilePatterns": [
+        "/(^|/)(?:\\.?devcontainer/)?(?:Dockerfile|Containerfile).*$/",
+        "/(^|/)Containerfile.*$/"
+      ],
+      "matchStrings": ["ENV\\s+MISE_VERSION=(?<currentValue>[0-9]+\\.[0-9]+\\.[0-9]+)"],
+      "depNameTemplate": "jdx/mise",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v?(?<version>.+)$"
+    }
+  ],
+  "mise": {
+    "managerFilePatterns": ["/(^|/)\\.mise.*\\.toml$/"]
+  }
+}

@@ -1,0 +1,188 @@
+name: release-please
+
+on:
+  workflow_run: # zizmor: ignore[dangerous-triggers]
+    workflows:
+      - ci
+    branches:
+      - main
+    types:
+      - completed
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  release-please:
+    if: github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-24.04
+    environment: ci
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: jdx/mise-action@c2a87611a18de5b3828c5652fe268e992400cb5c # v4.3.0
+        # zizmor: ignore[cache-poisoning]
+        with:
+          cache: true
+          install: false
+
+      - name: Setup tools
+        env:
+          PROTON_PASS_PERSONAL_ACCESS_TOKEN: ${{ secrets.PROTON_PASS_PERSONAL_ACCESS_TOKEN }}
+        run: mise run setup --pass-cli-login
+
+      - name: Load secrets from fnox
+        run: |
+          SECRETS_JSON="$(fnox export --all --format json)"
+          export SECRETS_JSON
+          node -e '
+            const data = JSON.parse(process.env.SECRETS_JSON);
+            const secrets = data.secrets || {};
+            const fs = require("fs");
+            for (const [k, v] of Object.entries(secrets)) {
+              if (v) {
+                console.log("::add-mask::" + v);
+                const delimiter = "EOF_" + Date.now() + "_" + Math.random();
+                fs.appendFileSync(process.env.GITHUB_ENV, k + "<<" + delimiter + "\n" + v + "\n" + delimiter + "\n");
+              }
+            }
+          '
+
+      - uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
+        id: app_token
+        with:
+          app-id: ${{ env.GH_APP_ID }}
+          private-key: ${{ env.GH_APP_PRIVATE_KEY }}
+          permission-contents: write
+          permission-pull-requests: write
+          permission-issues: write
+
+      - uses: googleapis/release-please-action@45996ed1f6d02564a971a2fa1b5860e934307cf7 # v5.0.0
+        id: release_please
+        with:
+          token: ${{ steps.app_token.outputs.token }}
+          config-file: release-please-config.json
+          manifest-file: .release-please-manifest.json
+
+      - name: Re-sign release PR commits
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
+        with:
+          github-token: ${{ steps.app_token.outputs.token }}
+          script: |
+            const { owner, repo } = context.repo;
+            const { data: prs } = await github.rest.pulls.list({
+              owner,
+              repo,
+              state: 'open',
+              per_page: 100,
+            });
+            const releasePrs = prs.filter(p =>
+              p.labels.some(l => l.name === 'autorelease: pending') ||
+              p.title.startsWith('chore(main): release')
+            );
+
+            for (const pr of releasePrs) {
+              const { data: commits } = await github.rest.pulls.listCommits({
+                owner,
+                repo,
+                pull_number: pr.number,
+              });
+              if (commits.every(c => c.commit.verification?.verified)) {
+                core.info(`PR #${pr.number} is already signed and verified.`);
+                continue;
+              }
+              if (commits.length !== 1) {
+                core.warning(`PR #${pr.number} has ${commits.length} commits (expected 1). Skipping re-sign.`);
+                continue;
+              }
+              const c = commits[0];
+              const parent = c.parents[0]?.sha;
+              if (!parent) {
+                core.warning(`PR #${pr.number} commit ${c.sha} has no parent. Skipping.`);
+                continue;
+              }
+
+              const { data: cmp } = await github.rest.repos.compareCommitsWithBasehead({
+                owner,
+                repo,
+                basehead: `${parent}...${c.sha}`,
+              });
+
+              const additions = [];
+              const deletions = [];
+              for (const f of cmp.files ?? []) {
+                if (f.status === 'removed') {
+                  deletions.push({ path: f.filename });
+                  continue;
+                }
+                if (f.status === 'renamed' && f.previous_filename) {
+                  deletions.push({ path: f.previous_filename });
+                }
+                const { data: blob } = await github.rest.git.getBlob({
+                  owner,
+                  repo,
+                  file_sha: f.sha,
+                });
+                additions.push({
+                  path: f.filename,
+                  contents: blob.content,
+                });
+              }
+
+              const scratchBranch = `release-please-resign-${pr.number}-${Date.now()}`;
+              await github.rest.git.createRef({
+                owner,
+                repo,
+                ref: `refs/heads/${scratchBranch}`,
+                sha: parent,
+              });
+
+              try {
+                const headline = c.commit.message.split('\n')[0];
+                const body = c.commit.message.split('\n').slice(1).join('\n').trim();
+                const mutation = `mutation($input: CreateCommitOnBranchInput!) {
+                  createCommitOnBranch(input: $input) {
+                    commit {
+                      oid
+                    }
+                  }
+                }`;
+                const variables = {
+                  input: {
+                    branch: {
+                      repositoryNameWithOwner: `${owner}/${repo}`,
+                      branchName: scratchBranch,
+                    },
+                    message: {
+                      headline,
+                      body: body || null,
+                    },
+                    fileChanges: {
+                      additions,
+                      deletions,
+                    },
+                    expectedHeadOid: parent,
+                  },
+                };
+                const res = await github.graphql(mutation, variables);
+                const newSha = res.createCommitOnBranch.commit.oid;
+
+                await github.rest.git.updateRef({
+                  owner,
+                  repo,
+                  ref: `heads/${pr.head.ref}`,
+                  sha: newSha,
+                  force: true,
+                });
+                core.info(`PR #${pr.number} re-signed with commit ${newSha}`);
+              } finally {
+                await github.rest.git.deleteRef({
+                  owner,
+                  repo,
+                  ref: `heads/${scratchBranch}`,
+                }).catch(() => {});
+              }
+            }

@@ -1,0 +1,57 @@
+amends "package://github.com/jdx/hk/releases/download/v1.57.0/hk@1.57.0#/Config.pkl"
+import "package://github.com/jdx/hk/releases/download/v1.57.0/hk@1.57.0#/Builtins.pkl"
+
+local linters = new Mapping<String, Step> {
+    ["actionlint"] = Builtins.actionlint
+    ["biome"] = Builtins.biome
+    ["byte-order-marker"] = Builtins.byte_order_marker
+    ["check-executables-have-shebangs"] = Builtins.check_executables_have_shebangs
+    ["check-merge-conflict"] = Builtins.check_merge_conflict
+    ["hadolint"] = (Builtins.hadolint) {
+        glob = ".devcontainer/Containerfile*"
+    }
+    ["markdownlint"] {
+        glob = List("**/*.md", "**/*.markdown")
+        check = "markdownlint-cli2 {{files}}"
+        fix = "markdownlint-cli2 --fix {{files}}"
+    }
+    ["newlines"] = Builtins.newlines
+    ["pkl"] = Builtins.pkl
+    ["tombi"] = Builtins.tombi
+    ["trailing-whitespace"] = Builtins.trailing_whitespace
+    ["typos"] = Builtins.typos
+    ["yamllint"] = Builtins.yamllint
+    ["zizmor"] = Builtins.zizmor
+    ["nu-check"] {
+        glob = "*.nu"
+        check = "nu --commands 'open {{files}} | nu-check'"
+    }
+    ["mise-lock"] {
+        glob = List(".mise*.toml", "mise*.lock")
+        check = "mise lock"
+    }
+    ["renovate-config-validator"] {
+        glob = List("renovate.json", ".github/renovate.json")
+        check = "renovate-config-validator --strict {{files}}"
+    }
+}
+
+hooks {
+    ["pre-commit"] {
+        steps = linters
+    }
+    ["commit-msg"] {
+        steps {
+            ["commitlint"] {
+                check = "commitlint --edit"
+            }
+        }
+    }
+    ["fix"] {
+        fix = true
+        steps = linters
+    }
+    ["check"] {
+        steps = linters
+    }
+}

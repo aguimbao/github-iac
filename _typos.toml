@@ -1,0 +1,7 @@
+[files]
+extend-exclude = ["CHANGELOG.md"]
+
+[default.extend-words]
+passt = "passt"
+aguimbao = "aguimbao"
+iac = "iac"

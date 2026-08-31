@@ -1,0 +1,12 @@
+env = 'exec'
+
+[providers.protonpass]
+type = 'proton-pass'
+
+[secrets]
+PROTON_PASS_CREDENTIALS = { default = 'true' }
+GITHUB_TOKEN = { provider = 'protonpass', value = 'pass://Dev/GITHUB/ADMIN_PAT' }
+PULUMI_ACCESS_TOKEN = { provider = 'protonpass', value = 'pass://Dev/PULUMI/ACCESS_TOKEN' }
+RENOVATE_TOKEN = { provider = 'protonpass', value = 'pass://Dev/GITHUB/ADMIN_PAT' }
+GH_APP_ID = { provider = 'protonpass', value = 'pass://Dev/GITHUB/APP_AGUIMBAO_CI_ID' }
+GH_APP_PRIVATE_KEY = { provider = 'protonpass', value = 'pass://Dev/GITHUB/APP_AGUIMBAO_CI_PRIVATE_KEY' }

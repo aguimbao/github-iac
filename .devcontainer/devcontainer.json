@@ -1,0 +1,17 @@
+{
+  "name": "github-iac",
+  "build": {
+    "dockerfile": "Containerfile"
+  },
+  "runArgs": [
+    "--device=/dev/fuse",
+    "--device=/dev/net/tun",
+    "--security-opt=label=disable",
+    "--security-opt=seccomp=unconfined",
+    "--security-opt=unmask=ALL",
+    "--userns=keep-id"
+  ],
+  "containerUser": "vscode",
+  "remoteUser": "vscode",
+  "postCreateCommand": "mise run setup"
+}

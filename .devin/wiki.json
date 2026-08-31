@@ -1,0 +1,22 @@
+{
+  "repo_notes": [
+    {
+      "content": "Codebase architecture documentation",
+      "author": "aguimbao"
+    }
+  ],
+  "pages": [
+    {
+      "title": "Codebase architecture",
+      "purpose": "Explain the codebase architecture"
+    },
+    {
+      "title": "Usage",
+      "purpose": "Explain the different workflows"
+    },
+    {
+      "title": "Credentials",
+      "purpose": "Explain credential types, items, and usage"
+    }
+  ]
+}

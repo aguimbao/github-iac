@@ -1,0 +1,8 @@
+name: github-iac
+runtime:
+  name: nodejs
+  options:
+    packagemanager: bun
+    nodeargs: '--import tsx'
+description: GitHub Account Infrastructure as Code
+main: src/index.ts
