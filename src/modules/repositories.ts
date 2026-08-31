@@ -2,7 +2,7 @@ import * as github from "@pulumi/github";
 
 export interface RepositoryConfig {
   name: string;
-  description?: string;
+  description?: string | null;
   visibility?: "public" | "private" | "internal";
   hasIssues?: boolean;
   hasDiscussions?: boolean;
@@ -13,11 +13,15 @@ export interface RepositoryConfig {
   allowSquashMerge?: boolean;
   allowRebaseMerge?: boolean;
   allowAutoMerge?: boolean;
+  allowUpdateBranch?: boolean | null;
   deleteBranchOnMerge?: boolean;
   autoInit?: boolean;
   archived?: boolean;
   topics?: string[];
-  homepageUrl?: string;
+  homepageUrl?: string | null;
+  squashMergeCommitTitle?: "PR_TITLE" | "COMMIT_OR_PR_TITLE" | null;
+  squashMergeCommitMessage?: "PR_BODY" | "COMMIT_MESSAGES" | "BLANK" | null;
+  webCommitSignoffRequired?: boolean | null;
 }
 
 export function createRepositories(
@@ -28,7 +32,7 @@ export function createRepositories(
   for (const cfg of configs) {
     const repo = new github.Repository(cfg.name, {
       name: cfg.name,
-      description: cfg.description,
+      description: cfg.description ?? undefined,
       visibility: cfg.visibility ?? "public",
       hasIssues: cfg.hasIssues ?? true,
       hasDiscussions: cfg.hasDiscussions ?? false,
@@ -39,11 +43,15 @@ export function createRepositories(
       allowSquashMerge: cfg.allowSquashMerge ?? true,
       allowRebaseMerge: cfg.allowRebaseMerge ?? true,
       allowAutoMerge: cfg.allowAutoMerge ?? false,
+      allowUpdateBranch: cfg.allowUpdateBranch ?? undefined,
       deleteBranchOnMerge: cfg.deleteBranchOnMerge ?? true,
       autoInit: cfg.autoInit ?? false,
       archived: cfg.archived ?? false,
       topics: cfg.topics ?? [],
-      homepageUrl: cfg.homepageUrl,
+      homepageUrl: cfg.homepageUrl ?? undefined,
+      squashMergeCommitTitle: cfg.squashMergeCommitTitle ?? undefined,
+      squashMergeCommitMessage: cfg.squashMergeCommitMessage ?? undefined,
+      webCommitSignoffRequired: cfg.webCommitSignoffRequired ?? undefined,
     });
 
     repos.set(cfg.name, repo);

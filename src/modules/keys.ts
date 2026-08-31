@@ -36,7 +36,7 @@ export function createUserGpgKeys(configs: UserGpgKeyConfig[]): github.UserGpgKe
 export function createDeployKeys(
   configs: DeployKeyConfig[],
   repos: Map<string, github.Repository>,
-): github.BranchProtection[] | github.RepositoryDeployKey[] {
+): github.RepositoryDeployKey[] {
   return configs.map((cfg) => {
     const repo = repos.get(cfg.repository);
     const repository = repo ? repo.name : cfg.repository;
