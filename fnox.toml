@@ -10,3 +10,4 @@ PULUMI_ACCESS_TOKEN = { provider = 'protonpass', value = 'pass://Dev/PULUMI/ACCE
 RENOVATE_TOKEN = { provider = 'protonpass', value = 'pass://Dev/GITHUB/ADMIN_PAT' }
 GH_APP_ID = { provider = 'protonpass', value = 'pass://Dev/GITHUB/APP_AGUIMBAO_CI_ID' }
 GH_APP_PRIVATE_KEY = { provider = 'protonpass', value = 'pass://Dev/GITHUB/APP_AGUIMBAO_CI_PRIVATE_KEY' }
+IAC_ENCRYPTION_KEY = { provider = 'protonpass', value = 'pass://Dev/GITHUB_IAC/IAC_ENCRYPTION_KEY', default = '' }

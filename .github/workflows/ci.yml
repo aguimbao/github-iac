@@ -86,6 +86,14 @@ jobs:
                 console.log("::add-mask::" + v);
                 const delimiter = "EOF_" + Date.now() + "_" + Math.random();
                 fs.appendFileSync(process.env.GITHUB_ENV, k + "<<" + delimiter + "\n" + v + "\n" + delimiter + "\n");
+                if (k === "PRIVATE_CONFIG") {
+                  try {
+                    const priv = JSON.parse(v);
+                    for (const repo of priv.repositories || []) {
+                      if (repo.name) console.log("::add-mask::" + repo.name);
+                    }
+                  } catch {}
+                }
               }
             }
           '
@@ -98,6 +106,23 @@ jobs:
           permission-administration: write
           permission-contents: write
           permission-pull-requests: write
+
+      - name: Decrypt private configuration
+        run: |
+          if [ -f data.private.json.enc ] && [ -n "${IAC_ENCRYPTION_KEY:-}" ]; then
+            openssl enc -d -aes-256-cbc -pbkdf2 -iter 100000 -salt -in data.private.json.enc -out data.private.json -pass env:IAC_ENCRYPTION_KEY
+            node -e '
+              const fs = require("fs");
+              if (fs.existsSync("data.private.json")) {
+                try {
+                  const priv = JSON.parse(fs.readFileSync("data.private.json", "utf8"));
+                  for (const repo of priv.repositories || []) {
+                    if (repo.name) console.log("::add-mask::" + repo.name);
+                  }
+                } catch {}
+              }
+            '
+          fi
 
       - name: Pulumi Preview
         env:

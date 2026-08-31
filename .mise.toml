@@ -53,11 +53,26 @@ run = 'fnox exec -- hk fix --all'
 
 [tasks.preview]
 description = 'Preview Pulumi infrastructure changes'
+depends = ['decrypt']
 run = 'fnox exec -- pulumi preview'
 
 [tasks.up]
 description = 'Apply Pulumi infrastructure changes'
+depends = ['decrypt']
 run = 'fnox exec -- pulumi up --yes'
+
+[tasks.encrypt]
+description = 'Encrypt data.private.json into data.private.json.enc using Proton Pass key'
+run = 'fnox exec -- openssl enc -aes-256-cbc -pbkdf2 -iter 100000 -salt -in data.private.json -out data.private.json.enc -pass env:IAC_ENCRYPTION_KEY'
+
+[tasks.decrypt]
+description = 'Decrypt data.private.json.enc into data.private.json using Proton Pass key'
+shell = 'nu -c'
+run = '''
+if ("data.private.json.enc" | path exists) {
+  fnox exec -- openssl enc -d -aes-256-cbc -pbkdf2 -iter 100000 -salt -in data.private.json.enc -out data.private.json -pass env:IAC_ENCRYPTION_KEY
+}
+'''
 
 [tasks.renovate]
 description = 'Run Renovate dependency updates locally or remotely'
