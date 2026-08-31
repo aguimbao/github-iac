@@ -38,11 +38,7 @@ bun install
 let do_login = (($env.usage_pass_cli_login? | default "false") == "true")
 if $do_login {
   if (pass-cli info | complete | get exit_code) != 0 {
-    if ($env.PROTON_PASS_PERSONAL_ACCESS_TOKEN? | default "" | is-not-empty) {
-      pass-cli login --pat $env.PROTON_PASS_PERSONAL_ACCESS_TOKEN
-    } else {
-      pass-cli login
-    }
+    pass-cli login
   }
 }
 '''
