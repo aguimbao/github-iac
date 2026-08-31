@@ -19,18 +19,18 @@ export const repositories: RepositoryConfig[] = [
     hasWiki: false,
     hasDiscussions: false,
     allowSquashMerge: true,
-    allowMergeCommit: true,
-    allowRebaseMerge: true,
-    allowAutoMerge: false,
-    allowUpdateBranch: false,
-    deleteBranchOnMerge: false,
+    allowMergeCommit: false,
+    allowRebaseMerge: false,
+    allowAutoMerge: true,
+    allowUpdateBranch: true,
+    deleteBranchOnMerge: true,
     isTemplate: false,
     archived: false,
     topics: [],
     homepageUrl: null,
-    squashMergeCommitTitle: "COMMIT_OR_PR_TITLE",
+    squashMergeCommitTitle: "PR_TITLE",
     squashMergeCommitMessage: "COMMIT_MESSAGES",
-    webCommitSignoffRequired: false,
+    webCommitSignoffRequired: true,
   },
   {
     name: "omniroute",
@@ -39,7 +39,7 @@ export const repositories: RepositoryConfig[] = [
     visibility: "public",
     hasIssues: true,
     hasProjects: true,
-    hasWiki: true,
+    hasWiki: false,
     hasDiscussions: false,
     allowSquashMerge: true,
     allowMergeCommit: false,
@@ -52,7 +52,7 @@ export const repositories: RepositoryConfig[] = [
     topics: [],
     homepageUrl: null,
     squashMergeCommitTitle: "PR_TITLE",
-    squashMergeCommitMessage: "BLANK",
+    squashMergeCommitMessage: "COMMIT_MESSAGES",
     webCommitSignoffRequired: true,
   },
   {
@@ -152,6 +152,58 @@ export const sshKeys: UserSshKeyConfig[] = [
 ];
 export const gpgKeys: UserGpgKeyConfig[] = [];
 export const rulesets: RulesetConfig[] = [
+  {
+    name: "default",
+    repository: "github-iac",
+    target: "branch",
+    enforcement: "active",
+    conditions: {
+      refName: {
+        includes: ["~DEFAULT_BRANCH"],
+        excludes: [],
+      },
+    },
+    bypassActors: [
+      {
+        actorId: 23490125,
+        actorType: "User",
+        bypassMode: "always",
+      },
+    ],
+    rules: {
+      deletion: true,
+      nonFastForward: true,
+      requiredSignatures: true,
+      pullRequest: {
+        requiredApprovingReviewCount: 0,
+        dismissStaleReviewsOnPush: true,
+        requireCodeOwnerReview: false,
+        requireLastPushApproval: false,
+        requiredReviewThreadResolution: false,
+        allowedMergeMethods: ["merge", "squash", "rebase"],
+      },
+      creation: true,
+      requiredStatusChecks: {
+        strictRequiredStatusChecksPolicy: true,
+        doNotEnforceOnCreate: false,
+        requiredChecks: [
+          {
+            context: "ci-gate",
+            integrationId: 15368,
+          },
+        ],
+      },
+      requiredCodeScanning: {
+        requiredCodeScanningTools: [
+          {
+            tool: "CodeQL",
+            securityAlertsThreshold: "all",
+            alertsThreshold: "all",
+          },
+        ],
+      },
+    },
+  },
   {
     name: "default",
     repository: "omniroute",
