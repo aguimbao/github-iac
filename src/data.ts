@@ -13,7 +13,7 @@ export const repositories: RepositoryConfig[] = [
   {
     name: "github-iac",
     description: "Github IAC",
-    visibility: "private",
+    visibility: "public",
     hasIssues: true,
     hasProjects: true,
     hasWiki: false,
