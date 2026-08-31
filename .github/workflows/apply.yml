@@ -63,7 +63,7 @@ jobs:
       - uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
         id: app_token
         with:
-          app-id: ${{ env.GH_APP_ID }}
+          client-id: ${{ env.GH_APP_ID }}
           private-key: ${{ env.GH_APP_PRIVATE_KEY }}
           permission-administration: write
           permission-contents: write
@@ -90,4 +90,4 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ steps.app_token.outputs.token }}
           PULUMI_ACCESS_TOKEN: ${{ env.PULUMI_ACCESS_TOKEN }}
-        run: pulumi up --yes
+        run: pulumi up --yes --stack prod

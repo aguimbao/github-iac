@@ -38,7 +38,11 @@ bun install
 let do_login = (($env.usage_pass_cli_login? | default "false") == "true")
 if $do_login {
   if (pass-cli info | complete | get exit_code) != 0 {
-    pass-cli login
+    if ($env.PROTON_PASS_PERSONAL_ACCESS_TOKEN? | default "" | is-not-empty) {
+      pass-cli login --pat $env.PROTON_PASS_PERSONAL_ACCESS_TOKEN
+    } else {
+      pass-cli login
+    }
   }
 }
 '''
@@ -54,12 +58,12 @@ run = 'fnox exec -- hk fix --all'
 [tasks.preview]
 description = 'Preview Pulumi infrastructure changes'
 depends = ['decrypt']
-run = 'fnox exec -- pulumi preview'
+run = 'fnox exec -- pulumi preview --stack prod'
 
 [tasks.up]
 description = 'Apply Pulumi infrastructure changes'
 depends = ['decrypt']
-run = 'fnox exec -- pulumi up --yes'
+run = 'fnox exec -- pulumi up --yes --stack prod'
 
 [tasks.encrypt]
 description = 'Encrypt data.private.json into data.private.json.enc using Proton Pass key'
