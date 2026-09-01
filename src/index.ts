@@ -17,7 +17,7 @@ import { createWebhooks } from "./modules/webhooks";
 const config = loadConfig();
 
 // Repositories
-export const repos = createRepositories(config.repositories);
+export const repos = await createRepositories(config.repositories);
 export const repoBranchDefaults = createBranchDefaults(config.repositories, repos);
 export const repoVulnerabilityAlerts = createVulnerabilityAlerts(
   config.repositories,
