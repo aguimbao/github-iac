@@ -12,7 +12,6 @@ import type { WebhookConfig } from "./modules/webhooks";
 export const repositories: RepositoryConfig[] = [
   {
     name: "github-iac",
-    description: "Github IAC",
     visibility: "public",
     hasIssues: true,
     hasProjects: true,
@@ -39,8 +38,6 @@ export const repositories: RepositoryConfig[] = [
   },
   {
     name: "omniroute",
-    description:
-      "OmniRoute service, uses mise for dependencies, fnox for secret handling and podman + pitchfork container / daemon management.",
     visibility: "public",
     hasIssues: true,
     hasProjects: true,
@@ -67,7 +64,6 @@ export const repositories: RepositoryConfig[] = [
   },
   {
     name: "repository-template",
-    description: "Repository templates",
     visibility: "public",
     hasIssues: true,
     hasProjects: true,
@@ -94,7 +90,6 @@ export const repositories: RepositoryConfig[] = [
   },
   {
     name: "aguimbao.me",
-    description: "aguimbao.me",
     visibility: "public",
     hasIssues: true,
     hasProjects: true,
@@ -121,7 +116,6 @@ export const repositories: RepositoryConfig[] = [
   },
   {
     name: "42",
-    description: "School 42 projects",
     visibility: "public",
     hasIssues: true,
     hasProjects: true,
@@ -148,7 +142,6 @@ export const repositories: RepositoryConfig[] = [
   },
   {
     name: "aguimbao",
-    description: "aguimbao",
     visibility: "public",
     hasIssues: true,
     hasProjects: true,

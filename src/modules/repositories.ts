@@ -1,4 +1,5 @@
 import * as github from "@pulumi/github";
+import * as pulumi from "@pulumi/pulumi";
 
 export interface RepositoryConfig {
   name: string;
@@ -29,10 +30,78 @@ export interface RepositoryConfig {
   dependabotSecurityUpdates?: boolean | null;
 }
 
-export function createRepositories(
+export function extractAboutFromReadme(content: string): string {
+  const lines = content.split(/\r?\n/);
+  let foundH1 = false;
+  const descriptionLines: string[] = [];
+
+  for (const line of lines) {
+    if (!foundH1) {
+      if (/^#\s+/.test(line)) {
+        foundH1 = true;
+      }
+      continue;
+    }
+
+    if (/^#{1,6}\s+/.test(line)) {
+      break;
+    }
+
+    descriptionLines.push(line);
+  }
+
+  if (!foundH1) {
+    return "";
+  }
+
+  return descriptionLines
+    .join(" ")
+    .replace(/\[([^\]]+)\]\([^)]+\)/g, "$1")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+async function fetchRepoReadme(
+  owner: string,
+  repo: string,
+  token?: string,
+): Promise<string> {
+  const headers: Record<string, string> = {
+    Accept: "application/vnd.github.raw+json",
+    "User-Agent": "github-iac",
+  };
+  if (token) {
+    headers.Authorization = `Bearer ${token}`;
+  }
+
+  try {
+    const res = await fetch(`https://api.github.com/repos/${owner}/${repo}/readme`, {
+      headers,
+    });
+    if (!res.ok) return "";
+    return await res.text();
+  } catch {
+    return "";
+  }
+}
+
+export async function createRepositories(
   configs: RepositoryConfig[],
-): Map<string, github.Repository> {
+): Promise<Map<string, github.Repository>> {
   const repos = new Map<string, github.Repository>();
+  const ghConfig = new pulumi.Config("github");
+  const owner = ghConfig.get("owner") || process.env.GITHUB_OWNER || "aguimbao";
+  const token = ghConfig.get("token") || process.env.GITHUB_TOKEN;
+
+  const descriptions = await Promise.all(
+    configs.map(async (cfg) => {
+      const readme = await fetchRepoReadme(owner, cfg.name, token);
+      const about = extractAboutFromReadme(readme);
+      return { name: cfg.name, description: about || undefined };
+    }),
+  );
+
+  const descriptionMap = new Map(descriptions.map((d) => [d.name, d.description]));
 
   for (const cfg of configs) {
     let securityAndAnalysis: github.types.input.RepositorySecurityAndAnalysis | undefined;
@@ -55,7 +124,7 @@ export function createRepositories(
 
     const repo = new github.Repository(cfg.name, {
       name: cfg.name,
-      description: cfg.description ?? undefined,
+      description: descriptionMap.get(cfg.name),
       visibility: cfg.visibility ?? "public",
       hasIssues: cfg.hasIssues ?? true,
       hasDiscussions: cfg.hasDiscussions ?? false,
