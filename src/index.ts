@@ -6,7 +6,11 @@ import { createCollaborators } from "./modules/collaborators";
 import { createEnvironments } from "./modules/environments";
 import { createDeployKeys, createUserGpgKeys, createUserSshKeys } from "./modules/keys";
 import { createPages } from "./modules/pages";
-import { createRepositories } from "./modules/repositories";
+import {
+  createBranchDefaults,
+  createRepositories,
+  createVulnerabilityAlerts,
+} from "./modules/repositories";
 import { createRulesets } from "./modules/rulesets";
 import { createWebhooks } from "./modules/webhooks";
 
@@ -14,6 +18,11 @@ const config = loadConfig();
 
 // Repositories
 export const repos = createRepositories(config.repositories);
+export const repoBranchDefaults = createBranchDefaults(config.repositories, repos);
+export const repoVulnerabilityAlerts = createVulnerabilityAlerts(
+  config.repositories,
+  repos,
+);
 
 // User Keys
 export const userSshKeys = createUserSshKeys(config.sshKeys);
