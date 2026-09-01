@@ -51,15 +51,10 @@ run = 'fnox exec -- hk check --all'
 description = 'Fix formatting and linting errors via hk'
 run = 'fnox exec -- hk fix --all'
 
-[tasks.preview]
-description = 'Preview Pulumi infrastructure changes'
+[tasks.pulumi]
+description = 'Run Pulumi CLI with decrypted data and secrets'
 depends = ['decrypt']
-run = 'fnox exec -- pulumi preview --stack prod'
-
-[tasks.up]
-description = 'Apply Pulumi infrastructure changes'
-depends = ['decrypt']
-run = 'fnox exec -- pulumi up --yes --stack prod'
+run = 'fnox exec -- pulumi'
 
 [tasks.encrypt]
 description = 'Encrypt data.private.json into data.private.json.enc using Proton Pass key'
