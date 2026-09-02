@@ -114,7 +114,4 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ steps.app_token.outputs.token }}
           PULUMI_ACCESS_TOKEN: ${{ env.PULUMI_ACCESS_TOKEN }}
-          PULUMI_EXPERIMENTAL: 'true'
-        run: |
-          pulumi preview --save-plan plan.json --stack prod
-          pulumi up --plan plan.json --yes --stack prod
+        run: pulumi up --yes --stack prod
