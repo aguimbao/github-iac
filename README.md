@@ -1,6 +1,6 @@
 # github-iac
 
-Infrastructure as Code for GitHub account management via [Pulumi](https://www.pulumi.com/), driven by [mise](https://mise.jdx.dev) and [fnox](https://github.com/jdx/fnox).
+Infrastructure as Code for GitHub account management via [pulumi](https://www.pulumi.com/), driven by [mise](https://mise.jdx.dev) and [fnox](https://github.com/jdx/fnox).
 
 ## Prerequisites
 
