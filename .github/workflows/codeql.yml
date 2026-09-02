@@ -1,12 +1,13 @@
 name: codeql
 
 on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
+  # temporarily disabled for testing - push/pull_request disabled
+  # push:
+  #   branches:
+  #     - main
+  # pull_request:
+  #   branches:
+  #     - main
   schedule:
     - cron: '0 6 * * 1'
   workflow_dispatch:
