@@ -36,10 +36,94 @@ jobs:
       - name: Check code
         run: mise run lint
 
-  apply:
+  preview:
     runs-on: ubuntu-24.04
     needs:
       - lint
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: jdx/mise-action@c2a87611a18de5b3828c5652fe268e992400cb5c # v4.3.0
+        # zizmor: ignore[cache-poisoning]
+        with:
+          cache: true
+          install: false
+
+      - name: Setup tools
+        env:
+          PROTON_PASS_PERSONAL_ACCESS_TOKEN: ${{ secrets.PROTON_PASS_PERSONAL_ACCESS_TOKEN }}
+        run: mise run setup --pass-cli-login
+
+      - name: Load secrets from fnox
+        run: |
+          SECRETS_JSON="$(fnox export --all --format json)"
+          export SECRETS_JSON
+          node -e '
+            const data = JSON.parse(process.env.SECRETS_JSON);
+            const secrets = data.secrets || {};
+            const fs = require("fs");
+            for (const [k, v] of Object.entries(secrets)) {
+              if (v) {
+                console.log("::add-mask::" + v);
+                const delimiter = "EOF_" + Date.now() + "_" + Math.random();
+                fs.appendFileSync(process.env.GITHUB_ENV, k + "<<" + delimiter + "\n" + v + "\n" + delimiter + "\n");
+                if (k === "PRIVATE_CONFIG") {
+                  try {
+                    const priv = JSON.parse(v);
+                    for (const repo of priv.repositories || []) {
+                      if (repo.name) console.log("::add-mask::" + repo.name);
+                    }
+                  } catch {}
+                }
+              }
+            }
+          '
+
+      - uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
+        id: app_token
+        with:
+          client-id: ${{ env.GH_APP_ID }}
+          private-key: ${{ env.GH_APP_PRIVATE_KEY }}
+          permission-administration: write
+          permission-contents: write
+          permission-pull-requests: write
+
+      - name: Decrypt private configuration
+        run: |
+          if [ -f data.private.json.enc ] && [ -n "${IAC_ENCRYPTION_KEY:-}" ]; then
+            openssl enc -d -aes-256-cbc -pbkdf2 -iter 100000 -salt -in data.private.json.enc -out data.private.json -pass env:IAC_ENCRYPTION_KEY
+            node -e '
+              const fs = require("fs");
+              if (fs.existsSync("data.private.json")) {
+                try {
+                  const priv = JSON.parse(fs.readFileSync("data.private.json", "utf8"));
+                  for (const repo of priv.repositories || []) {
+                    if (repo.name) console.log("::add-mask::" + repo.name);
+                  }
+                } catch {}
+              }
+            '
+          fi
+
+      - name: Pulumi Preview
+        uses: pulumi/actions@8e5e406f4007fca908480587cb9893c07090f58d # v7.0.0
+        with:
+          command: preview
+          stack-name: prod
+          comment-on-summary: true
+          github-token: ${{ steps.app_token.outputs.token }}
+        env:
+          GITHUB_TOKEN: ${{ steps.app_token.outputs.token }}
+          PULUMI_ACCESS_TOKEN: ${{ env.PULUMI_ACCESS_TOKEN }}
+
+  apply:
+    runs-on: ubuntu-24.04
+    needs:
+      - preview
     environment: production
     permissions:
       contents: read
@@ -111,7 +195,12 @@ jobs:
           fi
 
       - name: Pulumi Apply
+        uses: pulumi/actions@8e5e406f4007fca908480587cb9893c07090f58d # v7.0.0
+        with:
+          command: up
+          stack-name: prod
+          comment-on-summary: true
+          github-token: ${{ steps.app_token.outputs.token }}
         env:
           GITHUB_TOKEN: ${{ steps.app_token.outputs.token }}
           PULUMI_ACCESS_TOKEN: ${{ env.PULUMI_ACCESS_TOKEN }}
-        run: pulumi up --yes --stack prod

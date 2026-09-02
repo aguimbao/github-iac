@@ -1,11 +1,17 @@
 import * as github from "@pulumi/github";
 
+export interface EnvironmentReviewersConfig {
+  users?: number[];
+  teams?: number[];
+}
+
 export interface EnvironmentConfig {
   repository: string;
   environment: string;
   waitTimer?: number | null;
   canAdminsBypass?: boolean | null;
   preventSelfReview?: boolean | null;
+  reviewers?: EnvironmentReviewersConfig | null;
 }
 
 export function createEnvironments(
@@ -22,6 +28,7 @@ export function createEnvironments(
       waitTimer: cfg.waitTimer ?? undefined,
       canAdminsBypass: cfg.canAdminsBypass ?? undefined,
       preventSelfReview: cfg.preventSelfReview ?? undefined,
+      reviewers: cfg.reviewers ? [cfg.reviewers] : undefined,
     });
   });
 }

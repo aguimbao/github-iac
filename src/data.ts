@@ -387,6 +387,10 @@ export const environments: EnvironmentConfig[] = [
     repository: "github-iac",
     environment: "production",
     waitTimer: null,
+    preventSelfReview: false,
+    reviewers: {
+      users: [23490125],
+    },
   },
   {
     repository: "aguimbao.me",
