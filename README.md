@@ -2,6 +2,10 @@
 
 Infrastructure as Code for GitHub account management via [pulumi](https://www.pulumi.com/), driven by [mise](https://mise.jdx.dev) and [fnox](https://github.com/jdx/fnox).
 
+## Docs
+
+[DeepWiki](https://deepwiki.com/aguimbao/github-iac)
+
 ## Prerequisites
 
 - [mise](https://mise.jdx.dev) / [devcontainers](https://containers.dev/)
@@ -25,6 +29,8 @@ mise run setup
 ### Commands
 
 ```bash
+# All accept --help
+
 # lint
 mise run lint
 # format
