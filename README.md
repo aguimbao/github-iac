@@ -40,8 +40,6 @@ mise run ci
 # bump versions
 mise run renovate
 
-# preview infrastructure changes
-mise run preview
-# apply infrastructure changes
-mise run up
+# pulumi
+mise run pulumi
 ```
