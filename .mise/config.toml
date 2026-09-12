@@ -1,5 +1,17 @@
 [settings]
 minimum_release_age = '30d'
+npm.package_manager = 'bun'
 
 [tool_config]
 locked = true
+
+[tool_alias]
+bun = 'aqua:oven-sh/bun'
+
+[tools]
+'aqua:nushell/nushell' = '0.115.1'
+node = '24.21.0'
+bun = '1.4.2'
+
+[hooks]
+postinstall = 'bun install'

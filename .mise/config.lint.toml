@@ -20,7 +20,7 @@ run = '''
 if ($env.GH_TOKEN? | is-not-empty) or ($env.GITHUB_TOKEN? | is-not-empty) {
   hk check --all
 } else if (which fnox | is-not-empty) {
-  fnox exec -P github --if-missing ignore -- hk check --all
+  fnox exec -P github -- hk check --all
 } else {
   hk check --all
 }
@@ -33,7 +33,7 @@ run = '''
 if ($env.GH_TOKEN? | is-not-empty) or ($env.GITHUB_TOKEN? | is-not-empty) {
   hk fix --all
 } else if (which fnox | is-not-empty) {
-  fnox exec -P github --if-missing ignore -- hk fix --all
+  fnox exec -P github -- hk fix --all
 } else {
   hk fix --all
 }

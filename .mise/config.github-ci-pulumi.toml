@@ -1,2 +1,0 @@
-[env]
-FNOX_PROFILE = '{% if env.FNOX_PROFILE %}{{ env.FNOX_PROFILE }},{% endif %}github-ci-pulumi'
