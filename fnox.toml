@@ -13,6 +13,7 @@ IAC_ENCRYPTION_KEY = { provider = 'protonpass', value = 'ffL5t8HoN6OftdRBn3H4AFK
 
 [profiles.github.secrets]
 GH_TOKEN = { provider = 'protonpass', value = 'iNNpoIen2ODLYDH9Uc4AjHfnhzsv5gEYHvM0ZCylru5ajhBclgyFp5IQKZYy8LzF2k4Ylbgy2oFJ1siQ9PDKsw==/CjT9NC8oPa2y3If6OYcH4_EDaNO23-6LGNJdNqA7OFUiU_iGSsgd1hRD6IP-eS-nx8YiQUWru4-a4bltU_mArA==/READ_PUBLIC_PAT' }
+GITHUB_TOKEN = { provider = 'protonpass', value = 'iNNpoIen2ODLYDH9Uc4AjHfnhzsv5gEYHvM0ZCylru5ajhBclgyFp5IQKZYy8LzF2k4Ylbgy2oFJ1siQ9PDKsw==/CjT9NC8oPa2y3If6OYcH4_EDaNO23-6LGNJdNqA7OFUiU_iGSsgd1hRD6IP-eS-nx8YiQUWru4-a4bltU_mArA==/READ_PUBLIC_PAT' }
 
 [profiles.github-local-renovate.secrets]
 RENOVATE_TOKEN = { provider = 'protonpass', value = 'iNNpoIen2ODLYDH9Uc4AjHfnhzsv5gEYHvM0ZCylru5ajhBclgyFp5IQKZYy8LzF2k4Ylbgy2oFJ1siQ9PDKsw==/CjT9NC8oPa2y3If6OYcH4_EDaNO23-6LGNJdNqA7OFUiU_iGSsgd1hRD6IP-eS-nx8YiQUWru4-a4bltU_mArA==/RENOVATE_PAT' }
@@ -25,7 +26,3 @@ GH_APP_PRIVATE_KEY = { provider = 'protonpass', value = 'iNNpoIen2ODLYDH9Uc4AjHf
 [profiles.github-app-ci-renovate.secrets]
 GH_APP_ID = { provider = 'protonpass', value = 'iNNpoIen2ODLYDH9Uc4AjHfnhzsv5gEYHvM0ZCylru5ajhBclgyFp5IQKZYy8LzF2k4Ylbgy2oFJ1siQ9PDKsw==/CjT9NC8oPa2y3If6OYcH4_EDaNO23-6LGNJdNqA7OFUiU_iGSsgd1hRD6IP-eS-nx8YiQUWru4-a4bltU_mArA==/APP_AGUIMBAO_CI_RENOVATE_ID' }
 GH_APP_PRIVATE_KEY = { provider = 'protonpass', value = 'iNNpoIen2ODLYDH9Uc4AjHfnhzsv5gEYHvM0ZCylru5ajhBclgyFp5IQKZYy8LzF2k4Ylbgy2oFJ1siQ9PDKsw==/CjT9NC8oPa2y3If6OYcH4_EDaNO23-6LGNJdNqA7OFUiU_iGSsgd1hRD6IP-eS-nx8YiQUWru4-a4bltU_mArA==/APP_AGUIMBAO_CI_RENOVATE_PRIVATE_KEY' }
-
-[profiles.github-ci-pulumi.secrets]
-GITHUB_TOKEN = { provider = 'protonpass', value = 'iNNpoIen2ODLYDH9Uc4AjHfnhzsv5gEYHvM0ZCylru5ajhBclgyFp5IQKZYy8LzF2k4Ylbgy2oFJ1siQ9PDKsw==/CjT9NC8oPa2y3If6OYcH4_EDaNO23-6LGNJdNqA7OFUiU_iGSsgd1hRD6IP-eS-nx8YiQUWru4-a4bltU_mArA==/PULUMI_CLASSIC_PAT' }
-GH_TOKEN = { provider = 'protonpass', value = 'iNNpoIen2ODLYDH9Uc4AjHfnhzsv5gEYHvM0ZCylru5ajhBclgyFp5IQKZYy8LzF2k4Ylbgy2oFJ1siQ9PDKsw==/CjT9NC8oPa2y3If6OYcH4_EDaNO23-6LGNJdNqA7OFUiU_iGSsgd1hRD6IP-eS-nx8YiQUWru4-a4bltU_mArA==/PULUMI_CLASSIC_PAT' }

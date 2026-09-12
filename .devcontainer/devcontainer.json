@@ -14,5 +14,5 @@
   ],
   "containerUser": "vscode",
   "remoteUser": "vscode",
-  "postCreateCommand": "mise install && bun install"
+  "postCreateCommand": "mise install"
 }

@@ -26,7 +26,6 @@ devcontainer up
 # no devcontainer
 mise trust
 mise install
-bun install
 
 # both
 mise run setup-pass-cli  # optional, for Proton Pass authentication
