@@ -1,7 +1,7 @@
 [files]
-extend-exclude = ["CHANGELOG.md"]
+extend-exclude = ['CHANGELOG.md', 'fnox.toml']
 
 [default.extend-words]
-passt = "passt"
-aguimbao = "aguimbao"
-iac = "iac"
+passt = 'passt'
+aguimbao = 'aguimbao'
+iac = 'iac'

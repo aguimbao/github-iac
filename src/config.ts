@@ -68,9 +68,6 @@ export function loadConfig(): GithubIacConfig {
     collaborators: [...publicData.collaborators, ...(privateConfig.collaborators ?? [])],
     autolinks: [...publicData.autolinks, ...(privateConfig.autolinks ?? [])],
     deployKeys: [...publicData.deployKeys, ...(privateConfig.deployKeys ?? [])],
-    actionVariables: [
-      ...publicData.actionVariables,
-      ...(privateConfig.actionVariables ?? []),
-    ],
+    actionVariables: [...publicData.actionVariables, ...(privateConfig.actionVariables ?? [])],
   };
 }

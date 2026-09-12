@@ -17,13 +17,19 @@ Infrastructure as Code for GitHub account management via [pulumi](https://www.pu
 
 Use your own `.fnox.local.toml` if needed
 
+> If using Proton Pass pass-cli, you need an authenticated pass-cli session with access to the project vault items. Run `mise run setup-pass-cli` to authenticate.
+
 ```bash
 # devcontainer
 devcontainer up
 
-# local
+# no devcontainer
 mise trust
-mise run setup
+mise install
+bun install
+
+# both
+mise run setup-pass-cli  # optional, for Proton Pass authentication
 ```
 
 ### Commands

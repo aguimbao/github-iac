@@ -19,10 +19,7 @@ const config = loadConfig();
 // Repositories
 export const repos = await createRepositories(config.repositories);
 export const repoBranchDefaults = createBranchDefaults(config.repositories, repos);
-export const repoVulnerabilityAlerts = createVulnerabilityAlerts(
-  config.repositories,
-  repos,
-);
+export const repoVulnerabilityAlerts = createVulnerabilityAlerts(config.repositories, repos);
 
 // User Keys
 export const userSshKeys = createUserSshKeys(config.sshKeys);
@@ -30,10 +27,7 @@ export const userGpgKeys = createUserGpgKeys(config.gpgKeys);
 
 // Rulesets & Branch Protections
 export const repoRulesets = createRulesets(config.rulesets, repos);
-export const repoBranchProtections = createBranchProtections(
-  config.branchProtections,
-  repos,
-);
+export const repoBranchProtections = createBranchProtections(config.branchProtections, repos);
 
 // Pages & Integrations
 export const repoPages = createPages(config.pages, repos);

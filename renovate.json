@@ -24,6 +24,42 @@
     {
       "matchManagers": ["github-actions"],
       "pinDigests": true
+    },
+    {
+      "groupName": "lint tools",
+      "matchFileNames": ["**/.mise/config.lint.toml", "**/hk.pkl"]
+    },
+    {
+      "groupName": "node runtime",
+      "matchFileNames": ["**/.mise/config.node.toml"]
+    },
+    {
+      "groupName": "dev tools",
+      "matchFileNames": ["**/.mise/config.dev.toml"]
+    },
+    {
+      "groupName": "core tools",
+      "matchFileNames": [
+        "**/.mise/config.fnox.toml",
+        "**/.mise/config.nushell.toml",
+        "**/.mise/config.proton-pass.toml"
+      ]
+    },
+    {
+      "groupName": "core tools",
+      "matchPackageNames": ["jdx/mise"]
+    },
+    {
+      "groupName": "iac tools",
+      "matchFileNames": ["**/.mise/config.github-iac.toml", "**/package.json"]
+    },
+    {
+      "groupName": "wolfi packages",
+      "matchDatasources": ["custom.apk-wolfi"]
+    },
+    {
+      "groupName": "github actions",
+      "matchManagers": ["github-actions"]
     }
   ],
   "customDatasources": {

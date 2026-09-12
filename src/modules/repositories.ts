@@ -61,11 +61,7 @@ export function extractAboutFromReadme(content: string): string {
     .trim();
 }
 
-async function fetchRepoReadme(
-  owner: string,
-  repo: string,
-  token?: string,
-): Promise<string> {
+async function fetchRepoReadme(owner: string, repo: string, token?: string): Promise<string> {
   const headers: Record<string, string> = {
     Accept: "application/vnd.github.raw+json",
     "User-Agent": "github-iac",
@@ -95,6 +91,9 @@ export async function createRepositories(
 
   const descriptions = await Promise.all(
     configs.map(async (cfg) => {
+      if (cfg.description !== undefined && cfg.description !== null) {
+        return { name: cfg.name, description: cfg.description || undefined };
+      }
       const readme = await fetchRepoReadme(owner, cfg.name, token);
       const about = extractAboutFromReadme(readme);
       return { name: cfg.name, description: about || undefined };
@@ -105,10 +104,7 @@ export async function createRepositories(
 
   for (const cfg of configs) {
     let securityAndAnalysis: github.types.input.RepositorySecurityAndAnalysis | undefined;
-    if (
-      cfg.secretScanning !== undefined ||
-      cfg.secretScanningPushProtection !== undefined
-    ) {
+    if (cfg.secretScanning !== undefined || cfg.secretScanningPushProtection !== undefined) {
       securityAndAnalysis = {
         secretScanning:
           cfg.secretScanning !== undefined && cfg.secretScanning !== null

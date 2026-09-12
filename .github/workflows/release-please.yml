@@ -3,7 +3,7 @@ name: release-please
 on:
   workflow_run: # zizmor: ignore[dangerous-triggers]
     workflows:
-      - apply
+      - ci
     branches:
       - main
     types:
@@ -17,6 +17,9 @@ jobs:
   release-please:
     if: github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-24.04
+    env:
+      MISE_SCOPE: 'ci-release-please'
+      PROTON_PASS_PERSONAL_ACCESS_TOKEN: ${{ secrets.PROTON_PASS_PERSONAL_ACCESS_TOKEN }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -29,9 +32,7 @@ jobs:
           install: false
 
       - name: Setup tools
-        env:
-          PROTON_PASS_PERSONAL_ACCESS_TOKEN: ${{ secrets.PROTON_PASS_PERSONAL_ACCESS_TOKEN }}
-        run: mise run setup --pass-cli-login
+        run: mise install && mise run setup-pass-cli
 
       - name: Load secrets from fnox
         run: |

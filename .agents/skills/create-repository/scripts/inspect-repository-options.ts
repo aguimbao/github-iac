@@ -24,8 +24,7 @@ function extractInterfaceFields(filePath: string, interfaceName: string): FieldI
   const fields: FieldInfo[] = [];
   for (const rawLine of match[1].split("\n")) {
     const line = rawLine.trim();
-    if (!line || line.startsWith("//") || line.startsWith("/*") || line.startsWith("*"))
-      continue;
+    if (!line || line.startsWith("//") || line.startsWith("/*") || line.startsWith("*")) continue;
     const m = line.match(/^([a-zA-Z0-9_]+)(\?)?:\s*(.+?);?$/);
     if (m)
       fields.push({
@@ -46,24 +45,19 @@ function extractProviderDefaults(filePath: string): Record<string, string> {
   return out;
 }
 
-function groupBy<T>(
-  items: T[],
-  key: (t: T) => string,
-): { usedBy: string[]; template: unknown }[] {
+function groupBy<T>(items: T[], key: (t: T) => string): { usedBy: string[]; template: unknown }[] {
   const map = new Map<string, { usedBy: string[]; template: unknown }>();
   for (const item of items) {
     const k = key(item);
     const entry = map.get(k);
     if (entry)
       entry.usedBy.push(
-        (item as Record<string, string>).repository ??
-          (item as Record<string, string>).name,
+        (item as Record<string, string>).repository ?? (item as Record<string, string>).name,
       );
     else
       map.set(k, {
         usedBy: [
-          (item as Record<string, string>).repository ??
-            (item as Record<string, string>).name,
+          (item as Record<string, string>).repository ?? (item as Record<string, string>).name,
         ],
         template: item,
       });
@@ -72,8 +66,10 @@ function groupBy<T>(
 }
 
 const repos = data.repositories as Record<string, unknown>[];
-const templateRepo = (repos.find((r) => r.name === "repository-template") ??
-  repos[0]) as Record<string, unknown>;
+const templateRepo = (repos.find((r) => r.name === "repository-template") ?? repos[0]) as Record<
+  string,
+  unknown
+>;
 const providerDefaults = extractProviderDefaults(reposModulePath);
 
 const repositoryFields: FieldInfo[] = extractInterfaceFields(
@@ -86,7 +82,7 @@ const repositoryFields: FieldInfo[] = extractInterfaceFields(
 }));
 
 const rulesets = (data as Record<string, unknown>).rulesets as Record<string, unknown>[];
-const stripRepo = ({ repository, ...rest }: Record<string, unknown>) => rest;
+const stripRepo = ({ repository: _repository, ...rest }: Record<string, unknown>) => rest;
 const rulesetVariants = groupBy(rulesets, (r) =>
   JSON.stringify(stripRepo(r as Record<string, unknown>)),
 ).map((v) => ({
@@ -94,7 +90,7 @@ const rulesetVariants = groupBy(rulesets, (r) =>
   template: { ...(v.template as Record<string, unknown>), repository: "<NEW_REPO_NAME>" },
 }));
 
-const stripName = ({ name, ...rest }: Record<string, unknown>) => rest;
+const stripName = ({ name: _name, ...rest }: Record<string, unknown>) => rest;
 const repositoryVariants = groupBy(repos, (r) =>
   JSON.stringify(stripName(r as Record<string, unknown>)),
 ).map((v) => ({
@@ -110,9 +106,7 @@ function discoverAssociatedModules(): {
   const configPath = path.join(repoRoot, "src/config.ts");
   const configSrc = fs.readFileSync(configPath, "utf-8");
   const typeToFile = new Map<string, string>();
-  for (const m of configSrc.matchAll(
-    /import\s+type\s*\{([^}]+)\}\s*from\s*["']([^"']+)["']/g,
-  )) {
+  for (const m of configSrc.matchAll(/import\s+type\s*\{([^}]+)\}\s*from\s*["']([^"']+)["']/g)) {
     const rel = m[2].replace(/^\.\//, "src/").replace(/\.ts$/, ".ts");
     for (const t of m[1].split(",")) {
       const typeName = t.trim();
