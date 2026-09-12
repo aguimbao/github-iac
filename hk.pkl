@@ -1,14 +1,13 @@
-amends "package://github.com/jdx/hk/releases/download/v1.57.0/hk@1.57.0#/Config.pkl"
-import "package://github.com/jdx/hk/releases/download/v1.57.0/hk@1.57.0#/Builtins.pkl"
+amends "package://github.com/jdx/hk/releases/download/v1.58.1/hk@1.58.1#/Config.pkl"
+import "package://github.com/jdx/hk/releases/download/v1.58.1/hk@1.58.1#/Builtins.pkl"
 
 local linters = new Mapping<String, Step> {
     ["actionlint"] = Builtins.actionlint
-    ["biome"] = Builtins.biome
     ["byte-order-marker"] = Builtins.byte_order_marker
     ["check-executables-have-shebangs"] = Builtins.check_executables_have_shebangs
     ["check-merge-conflict"] = Builtins.check_merge_conflict
     ["hadolint"] = (Builtins.hadolint) {
-        glob = ".devcontainer/Containerfile*"
+        glob = List("Containerfile*", ".devcontainer/Containerfile*")
     }
     ["markdownlint"] {
         glob = List("**/*.md", "**/*.markdown")
@@ -16,8 +15,28 @@ local linters = new Mapping<String, Step> {
         fix = "markdownlint-cli2 --fix {{files}}"
     }
     ["newlines"] = Builtins.newlines
+    ["oxlint"] = Builtins.ox_lint
+    ["oxfmt"] = (Builtins.oxfmt) {
+        glob = List(
+            "**/*.js",
+            "**/*.mjs",
+            "**/*.cjs",
+            "**/*.ts",
+            "**/*.mts",
+            "**/*.cts",
+            "**/*.jsx",
+            "**/*.tsx",
+            "**/*.json",
+            "**/*.jsonc"
+        )
+    }
     ["pkl"] = Builtins.pkl
-    ["tombi"] = Builtins.tombi
+    ["tombi"] = (Builtins.tombi) {
+        exclude = List(".miserc.toml")
+    }
+    ["tombi-format"] = (Builtins.tombi_format) {
+        exclude = List(".miserc.toml")
+    }
     ["trailing-whitespace"] = Builtins.trailing_whitespace
     ["typos"] = Builtins.typos
     ["yamllint"] = Builtins.yamllint
@@ -27,8 +46,9 @@ local linters = new Mapping<String, Step> {
         check = "nu --commands 'open {{files}} | nu-check'"
     }
     ["mise-lock"] {
-        glob = List(".mise*.toml", "mise*.lock")
-        check = "mise lock"
+        glob = List(".miserc.toml", ".mise/**/*.toml", ".mise/**/*.lock")
+        check = "nu -c 'mise lock; git diff --exit-code -- .mise/*.lock'"
+        fix = "mise lock"
     }
     ["renovate-config-validator"] {
         glob = List("renovate.json", ".github/renovate.json")

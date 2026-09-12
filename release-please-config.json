@@ -3,7 +3,8 @@
   "packages": {
     ".": {
       "release-type": "simple",
-      "include-v-in-tag": true
+      "include-v-in-tag": true,
+      "extra-files": ["package.json"]
     }
   }
 }

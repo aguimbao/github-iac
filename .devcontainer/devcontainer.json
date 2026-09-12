@@ -1,7 +1,8 @@
 {
   "name": "github-iac",
   "build": {
-    "dockerfile": "Containerfile"
+    "dockerfile": "Containerfile",
+    "options": ["--format=docker"]
   },
   "runArgs": [
     "--device=/dev/fuse",
@@ -13,5 +14,5 @@
   ],
   "containerUser": "vscode",
   "remoteUser": "vscode",
-  "postCreateCommand": "mise run setup"
+  "postCreateCommand": "mise install && bun install"
 }

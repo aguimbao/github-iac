@@ -64,6 +64,7 @@ export const repositories: RepositoryConfig[] = [
   },
   {
     name: "repository-template",
+    description: "Repository templates",
     visibility: "public",
     hasIssues: true,
     hasProjects: true,
@@ -90,6 +91,7 @@ export const repositories: RepositoryConfig[] = [
   },
   {
     name: "aguimbao.me",
+    description: "aguimbao.me",
     visibility: "public",
     hasIssues: true,
     hasProjects: true,
@@ -116,6 +118,7 @@ export const repositories: RepositoryConfig[] = [
   },
   {
     name: "42",
+    description: "School 42 projects",
     visibility: "public",
     hasIssues: true,
     hasProjects: true,
@@ -142,6 +145,7 @@ export const repositories: RepositoryConfig[] = [
   },
   {
     name: "aguimbao",
+    description: "aguimbao",
     visibility: "public",
     hasIssues: true,
     hasProjects: true,
@@ -203,7 +207,7 @@ export const rulesets: RulesetConfig[] = [
         requireCodeOwnerReview: false,
         requireLastPushApproval: false,
         requiredReviewThreadResolution: false,
-        allowedMergeMethods: ["merge", "squash", "rebase"],
+        allowedMergeMethods: ["squash"],
       },
       creation: true,
       requiredStatusChecks: {
@@ -255,7 +259,7 @@ export const rulesets: RulesetConfig[] = [
         requireCodeOwnerReview: false,
         requireLastPushApproval: false,
         requiredReviewThreadResolution: false,
-        allowedMergeMethods: ["merge", "squash", "rebase"],
+        allowedMergeMethods: ["squash"],
       },
       creation: true,
       requiredStatusChecks: {

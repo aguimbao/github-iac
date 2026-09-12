@@ -1,0 +1,22 @@
+{% set target = env.MISE_SCOPE | default(value="dev") %}
+{% if target == "ci-lint" %}
+env = ["nushell", "node", "lint"]
+{% elif target == "ci-pulumi-preview" %}
+env = ["nushell", "proton-pass", "fnox", "node", "github-iac", "github-ci-pulumi"]
+{% elif target == "ci-pulumi-apply" %}
+env = ["nushell", "proton-pass", "fnox", "node", "github-iac", "github-ci-pulumi"]
+{% elif target == "ci-renovate" %}
+env = ["nushell", "proton-pass", "fnox", "node", "github-app-ci-renovate"]
+{% elif target == "ci-release-please" %}
+env = ["nushell", "proton-pass", "fnox", "node", "github-app-ci-release-please"]
+{% else %}
+env = [
+  "nushell",
+  "proton-pass",
+  "fnox",
+  "node",
+  "lint",
+  "github-iac",
+  "dev",
+]
+{% endif %}

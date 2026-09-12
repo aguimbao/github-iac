@@ -17,10 +17,8 @@ export function createActionsPermissions(
   workflowConfigs: WorkflowPermissionsConfig[],
   repos: Map<string, github.Repository>,
 ): (github.ActionsRepositoryPermissions | github.WorkflowRepositoryPermissions)[] {
-  const resources: (
-    | github.ActionsRepositoryPermissions
-    | github.WorkflowRepositoryPermissions
-  )[] = [];
+  const resources: (github.ActionsRepositoryPermissions | github.WorkflowRepositoryPermissions)[] =
+    [];
 
   for (const cfg of actionsConfigs) {
     const repo = repos.get(cfg.repository);
