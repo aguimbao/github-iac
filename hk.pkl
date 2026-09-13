@@ -40,7 +40,12 @@ local linters = new Mapping<String, Step> {
     ["trailing-whitespace"] = Builtins.trailing_whitespace
     ["typos"] = Builtins.typos
     ["yamllint"] = Builtins.yamllint
-    ["zizmor"] = Builtins.zizmor
+    ["zizmor"] = (Builtins.zizmor) {
+        check = "sh -c 'if [ -n \"${GH_TOKEN:-${GITHUB_TOKEN:-}}\" ]; then exec zizmor --no-progress \"$@\"; elif command -v fnox >/dev/null 2>&1; then exec fnox exec -P github -- zizmor --no-progress \"$@\"; else exec zizmor --no-progress \"$@\"; fi' -- {{files}}"
+        check_diff = null
+        check_after_diff = false
+        fix = "sh -c 'if [ -n \"${GH_TOKEN:-${GITHUB_TOKEN:-}}\" ]; then exec zizmor --no-progress --fix \"$@\"; elif command -v fnox >/dev/null 2>&1; then exec fnox exec -P github -- zizmor --no-progress --fix \"$@\"; else exec zizmor --no-progress --fix \"$@\"; fi' -- {{files}}"
+    }
     ["nu-check"] {
         glob = "*.nu"
         check = "nu --commands 'open {{files}} | nu-check'"
