@@ -1,69 +1,23 @@
-name: ci
+name: pulumi-drift
 
 on:
-  push:
-    branches:
-      - main
-    tags:
-      - 'v*.*.*'
-      - 'v*'
-  pull_request:
-    branches:
-      - main
+  schedule:
+    - cron: "0 5 * * *"
   workflow_dispatch:
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  group: github-iac-pulumi-drift
   cancel-in-progress: true
 
 permissions:
   contents: read
 
 jobs:
-  lint:
+  drift:
     runs-on: ubuntu-24.04
     permissions:
       contents: read
-      pull-requests: read
     env:
-      MISE_SCOPE: 'ci-lint'
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          fetch-depth: 0
-          persist-credentials: false
-
-      - uses: jdx/mise-action@c2a87611a18de5b3828c5652fe268e992400cb5c # v4.3.0
-        # zizmor: ignore[cache-poisoning]
-        with:
-          cache: true
-          install: false
-
-      - name: Setup tools
-        run: mise install
-
-      - name: Check code
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: mise run lint
-
-      - name: Verify clean worktree
-        run: git diff --exit-code
-
-      - name: Validate commit messages
-        if: github.event_name == 'pull_request'
-        run: commitlint --from ${{ github.event.pull_request.base.sha }} --to ${{ github.event.pull_request.head.sha }}
-
-  pulumi-preview:
-    runs-on: ubuntu-24.04
-    needs:
-      - lint
-    if: github.event_name == 'pull_request'
-    permissions:
-      contents: read
-      pull-requests: write
-    env:
-      MISE_SCOPE: 'ci-pulumi-preview'
       PROTON_PASS_PERSONAL_ACCESS_TOKEN: ${{ secrets.PROTON_PASS_PERSONAL_ACCESS_TOKEN }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -121,36 +75,15 @@ jobs:
             '
           fi
 
-      - name: Pulumi Preview
+      - name: Pulumi Drift Check
         uses: pulumi/actions@8e5e406f4007fca908480587cb9893c07090f58d # v7.0.0
         with:
           command: preview
           stack-name: prod
-          comment-on-pr: true
+          refresh: true
+          expect-no-changes: true
           comment-on-summary: true
           github-token: ${{ env.GITHUB_TOKEN }}
         env:
           GITHUB_TOKEN: ${{ env.GITHUB_TOKEN }}
           PULUMI_ACCESS_TOKEN: ${{ env.PULUMI_ACCESS_TOKEN }}
-
-  ci-gate:
-    runs-on: ubuntu-24.04
-    needs:
-      - lint
-      - pulumi-preview
-    if: always()
-    steps:
-      - name: Evaluate status
-        run: |
-          lint_status="${{ needs.lint.result }}"
-          preview_status="${{ needs.pulumi-preview.result }}"
-          if [ "$lint_status" = "success" ] && { [ "$preview_status" = "success" ] || [ "$preview_status" = "skipped" ]; }; then
-            echo "CI passed."
-            exit 0
-          fi
-          if [ "$lint_status" = "skipped" ] && [ "$preview_status" = "skipped" ]; then
-            echo "CI skipped."
-            exit 0
-          fi
-          echo "CI failed: lint=$lint_status, preview=$preview_status"
-          exit 1
