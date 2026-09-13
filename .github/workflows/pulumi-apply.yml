@@ -131,7 +131,7 @@ jobs:
             const hasChanges = Object.values(plan.resourcePlans || {}).some(
               (r) => (r.steps || []).some((s) => s !== "same"),
             );
-            fs.appendFileSync(process.env.GITHUB_OUTPUT, `has-changes=${hasChanges}\n`);
+            fs.appendFileSync(process.env.GITHUB_OUTPUT, "has-changes=" + hasChanges + "\n");
           '
 
       - name: Upload update plan
