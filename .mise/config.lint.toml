@@ -1,5 +1,5 @@
 [tools]
-'aqua:jdx/hk' = { version = '1.58.1', postinstall = 'hk install' }
+'aqua:jdx/hk' = { version = '2.0.1', postinstall = 'hk install' }
 'aqua:rhysd/actionlint' = '1.7.12'
 'aqua:koalaman/shellcheck' = '0.11.0'
 'aqua:hadolint/hadolint' = '2.15.1'
