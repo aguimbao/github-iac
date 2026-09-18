@@ -7,7 +7,7 @@ SHELL ["/bin/ash", "-eo", "pipefail", "-c"]
 RUN apk add --no-cache \
     bash=5.3-r13 \
     ca-certificates=20260611-r1 \
-    ca-certificates-bundle=20260611-r1 \
+    ca-certificates-bundle=20260909-r0 \
     crun=1.29.1-r1 \
     curl=8.22.0-r2 \
     fuse-overlayfs=1.18-r0 \
