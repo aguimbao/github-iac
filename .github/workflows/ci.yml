@@ -21,7 +21,7 @@ permissions:
 
 jobs:
   lint:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     permissions:
       contents: read
       pull-requests: read
@@ -55,7 +55,7 @@ jobs:
         run: commitlint --from ${{ github.event.pull_request.base.sha }} --to ${{ github.event.pull_request.head.sha }}
 
   pulumi-preview:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     needs:
       - lint
     if: github.event_name == 'pull_request'
@@ -134,7 +134,7 @@ jobs:
           PULUMI_ACCESS_TOKEN: ${{ env.PULUMI_ACCESS_TOKEN }}
 
   ci-gate:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     needs:
       - lint
       - pulumi-preview
