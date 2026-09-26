@@ -1,5 +1,5 @@
 [tools]
-'aqua:pulumi/pulumi' = '3.264.0'
+'aqua:pulumi/pulumi' = '3.265.0'
 
 [env]
 FNOX_PROFILE = '{% if env.FNOX_PROFILE %}{{ env.FNOX_PROFILE }},{% endif %}github-iac'
