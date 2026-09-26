@@ -1,5 +1,23 @@
 # Changelog
 
+## [1.0.0](https://github.com/aguimbao/github-iac/compare/v0.3.0...v1.0.0) (2026-09-26)
+
+
+### ⚠ BREAKING CHANGES
+
+* modernize repository scaffolding and sync iac state ([#14](https://github.com/aguimbao/github-iac/issues/14))
+
+### Features
+
+* add create-repository skill and update pulumi task ([#13](https://github.com/aguimbao/github-iac/issues/13)) ([38f5d5c](https://github.com/aguimbao/github-iac/commit/38f5d5c22a2a373821090ec611c3599b1be98e00))
+* modernize repository scaffolding and sync iac state ([#14](https://github.com/aguimbao/github-iac/issues/14)) ([fccfd3a](https://github.com/aguimbao/github-iac/commit/fccfd3a98f85ce9ecfeefa2606c9af9940714aab))
+
+
+### Bug Fixes
+
+* **hk:** fall back to fnox for zizmor token ([#25](https://github.com/aguimbao/github-iac/issues/25)) ([5de760a](https://github.com/aguimbao/github-iac/commit/5de760aac9909dcf32770159da6568be352f53fb))
+* **mise:** guard Proton Pass setup with credentials flag ([#44](https://github.com/aguimbao/github-iac/issues/44)) ([259b752](https://github.com/aguimbao/github-iac/commit/259b75235d0fe11c24019906dd615b7d57d5fae1))
+
 ## [0.3.0](https://github.com/aguimbao/github-iac/compare/v0.2.0...v0.3.0) (2026-09-02)
 
 
