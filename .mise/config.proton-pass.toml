@@ -8,11 +8,11 @@ PROTON_PASS_SESSION_DIR = "{{ [xdg_cache_home, 'pass-cli-' ~ (config_root | trim
 description = 'Authenticate Proton Pass CLI via personal access token'
 shell = 'nu -c'
 run = '''
-if (which pass-cli | is-empty) {
+let creds = (fnox get PROTON_PASS_CREDENTIALS | complete)
+if $creds.exit_code != 0 or ($creds.stdout | str trim) != "true" {
+  print "[setup-pass-cli] Proton Pass not enabled (PROTON_PASS_CREDENTIALS), skipping"
   error make { msg: "pass-cli is not installed" }
-}
-
-if ((pass-cli info | complete | get exit_code) == 0) {
+} else if ((pass-cli info | complete | get exit_code) == 0) {
   print "[setup-pass-cli] Proton Pass already authenticated"
 } else {
   let pat = ($env.PROTON_PASS_PERSONAL_ACCESS_TOKEN? | default "" | str trim)
