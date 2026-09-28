@@ -42,4 +42,5 @@ if ($env.GH_TOKEN? | is-not-empty) or ($env.GITHUB_TOKEN? | is-not-empty) {
 
 [tasks.typecheck]
 description = 'Typecheck all TypeScript'
+shell = 'nu -c'
 run = 'hk run typecheck'
