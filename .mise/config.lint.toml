@@ -10,7 +10,7 @@
 'aqua:tombi-toml/tombi' = '1.5.7'
 'npm:@commitlint/cli' = '21.2.3'
 'npm:renovate' = { version = '44.115.13', bun_args = '--trust' }
-markdownlint-cli2 = '0.23.3'
+'npm:markdownlint-cli2' = '0.23.3'
 'aqua:wasilibs/go-yamllint' = '1.38.0'
 'aqua:apple/pkl' = '0.32.1'
 
