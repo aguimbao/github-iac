@@ -15,6 +15,11 @@
   "labels": ["dependencies"],
   "packageRules": [
     {
+      "description": "Hold ubuntu runner major until GitHub ships a 26.04 image",
+      "matchDepNames": ["ubuntu"],
+      "enabled": false
+    },
+    {
       "matchUpdateTypes": ["minor", "patch", "digest", "pin", "pinDigest"],
       "automerge": true,
       "automergeType": "pr",
