@@ -61,6 +61,13 @@ local linters = new Mapping<String, Step> {
     }
 }
 
+local typechecks = new Mapping<String, Step> {
+    ["iac-typecheck"] {
+        glob = List("src/**", "index.ts")
+        check = "bunx --bun tsc --noEmit"
+    }
+}
+
 hooks {
     ["pre-commit"] {
         steps = linters
@@ -78,5 +85,11 @@ hooks {
     }
     ["check"] {
         steps = linters
+    }
+    ["typecheck"] {
+        steps = typechecks
+    }
+    ["pre-push"] {
+        steps = typechecks
     }
 }
