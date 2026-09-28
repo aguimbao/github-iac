@@ -134,7 +134,6 @@
     "fileFilters": [".mise/*.lock"],
     "executionMode": "branch"
   },
-  "allowedCommands": ["^POST_MISE_VERSION.*\\/tmp\\/renovate-mise\\/mise lock$"],
   "lockFileMaintenance": {
     "enabled": true,
     "schedule": ["at any time"]
