@@ -39,3 +39,7 @@ if ($env.GH_TOKEN? | is-not-empty) or ($env.GITHUB_TOKEN? | is-not-empty) {
   hk fix --all
 }
 '''
+
+[tasks.typecheck]
+description = 'Typecheck all TypeScript'
+run = 'hk run typecheck'

@@ -47,6 +47,9 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: mise run lint
 
+      - name: Typecheck
+        run: mise run typecheck
+
       - name: Verify clean worktree
         run: git diff --exit-code
 
