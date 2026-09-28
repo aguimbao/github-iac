@@ -129,7 +129,7 @@
   },
   "postUpgradeTasks": {
     "commands": [
-      "POST_MISE_VERSION=$(sed -n 's/^ENV MISE_VERSION=//p' .devcontainer/Containerfile | head -1) && curl -fsSL https://mise.run | MISE_VERSION=\"v${POST_MISE_VERSION}\" MISE_INSTALL_PATH=/tmp/renovate-mise/mise sh && /tmp/renovate-mise/mise lock"
+      "sh -c 'POST_MISE_VERSION=$(sed -n \"s/^ENV MISE_VERSION=//p\" .devcontainer/Containerfile | head -1) && curl -fsSL https://mise.run | MISE_VERSION=\"v${POST_MISE_VERSION}\" MISE_INSTALL_PATH=/tmp/renovate-mise/mise sh && /tmp/renovate-mise/mise lock'"
     ],
     "fileFilters": [".mise/*.lock"],
     "executionMode": "branch"
