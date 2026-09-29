@@ -63,6 +63,32 @@ export const repositories: RepositoryConfig[] = [
     dependabotSecurityUpdates: false,
   },
   {
+    name: "glance",
+    visibility: "public",
+    hasIssues: true,
+    hasProjects: true,
+    hasWiki: false,
+    hasDiscussions: false,
+    allowSquashMerge: true,
+    allowMergeCommit: false,
+    allowRebaseMerge: false,
+    allowAutoMerge: true,
+    allowUpdateBranch: true,
+    deleteBranchOnMerge: true,
+    isTemplate: false,
+    archived: false,
+    topics: [],
+    homepageUrl: null,
+    squashMergeCommitTitle: "PR_TITLE",
+    squashMergeCommitMessage: "PR_BODY",
+    webCommitSignoffRequired: true,
+    defaultBranch: "main",
+    vulnerabilityAlerts: false,
+    secretScanning: true,
+    secretScanningPushProtection: true,
+    dependabotSecurityUpdates: false,
+  },
+  {
     name: "repository-template",
     description: "Repository templates",
     visibility: "public",
@@ -234,6 +260,58 @@ export const rulesets: RulesetConfig[] = [
   {
     name: "default",
     repository: "omniroute",
+    target: "branch",
+    enforcement: "active",
+    conditions: {
+      refName: {
+        includes: ["~DEFAULT_BRANCH"],
+        excludes: [],
+      },
+    },
+    bypassActors: [
+      {
+        actorId: 23490125,
+        actorType: "User",
+        bypassMode: "always",
+      },
+    ],
+    rules: {
+      deletion: true,
+      nonFastForward: true,
+      requiredSignatures: true,
+      pullRequest: {
+        requiredApprovingReviewCount: 0,
+        dismissStaleReviewsOnPush: true,
+        requireCodeOwnerReview: false,
+        requireLastPushApproval: false,
+        requiredReviewThreadResolution: false,
+        allowedMergeMethods: ["squash"],
+      },
+      creation: true,
+      requiredStatusChecks: {
+        strictRequiredStatusChecksPolicy: true,
+        doNotEnforceOnCreate: false,
+        requiredChecks: [
+          {
+            context: "ci-gate",
+            integrationId: 15368,
+          },
+        ],
+      },
+      requiredCodeScanning: {
+        requiredCodeScanningTools: [
+          {
+            tool: "CodeQL",
+            securityAlertsThreshold: "all",
+            alertsThreshold: "all",
+          },
+        ],
+      },
+    },
+  },
+  {
+    name: "default",
+    repository: "glance",
     target: "branch",
     enforcement: "active",
     conditions: {
