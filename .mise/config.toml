@@ -9,7 +9,7 @@ locked = true
 bun = 'aqua:oven-sh/bun'
 
 [tools]
-'aqua:nushell/nushell' = '0.116.0'
+'aqua:nushell/nushell' = '0.116.1'
 node = '24.21.0'
 bun = '1.4.2'
 
