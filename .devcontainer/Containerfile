@@ -11,7 +11,7 @@ RUN apk add --no-cache \
     ca-certificates=20260909-r2 \
     ca-certificates-bundle=20260909-r2 \
     fuse-overlayfs=1.18-r0 \
-    git=2.55.0-r10 \
+    git=2.56.0-r0 \
     libcap-utils=2.78-r3 \
     libstdc++=16.2.0-r1 \
     podman=6.0.0-r4 \
