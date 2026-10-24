@@ -1,18 +1,18 @@
 [tools]
-'aqua:jdx/hk' = { version = '2.3.1', postinstall = 'hk install' }
+'aqua:jdx/hk' = { version = '2.8.1', postinstall = 'hk install' }
 'aqua:rhysd/actionlint' = '1.7.12'
 'aqua:koalaman/shellcheck' = '0.11.0'
 'aqua:hadolint/hadolint' = '2.15.1'
 'aqua:oxc-project/oxc/oxlint' = '1.81.0'
 'aqua:oxc-project/oxc/oxfmt' = '1.81.0'
-'aqua:zizmorcore/zizmor' = '1.30.1'
-'aqua:crate-ci/typos' = '1.50.3'
-'aqua:tombi-toml/tombi' = '1.5.7'
-'npm:@commitlint/cli' = '21.2.3'
-'npm:renovate' = { version = '44.115.13', bun_args = '--trust' }
-'npm:markdownlint-cli2' = '0.23.3'
+'aqua:zizmorcore/zizmor' = '1.31.1'
+'aqua:crate-ci/typos' = '1.51.1'
+'aqua:tombi-toml/tombi' = '1.9.1'
+'npm:@commitlint/cli' = '21.2.4'
+'npm:renovate' = { version = '44.181.1', bun_args = '--trust' }
+'npm:markdownlint-cli2' = '0.24.0'
 'aqua:wasilibs/go-yamllint' = '1.38.0'
-'aqua:apple/pkl' = '0.32.1'
+'aqua:apple/pkl' = '0.32.2'
 
 [tasks.lint]
 description = 'Run all code quality checks via hk'
