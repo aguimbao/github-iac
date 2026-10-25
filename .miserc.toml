@@ -1,11 +1,10 @@
-{% set target = env.MISE_SCOPE | default(value="dev") %}
-{% if target == "ci-lint" %}
+{% if env.MISE_SCOPE == "ci-lint" %}
 env = ["lint"]
-{% elif target == "ci-pulumi-preview" or target == "ci-pulumi-apply" %}
+{% elif env.MISE_SCOPE == "ci-pulumi-preview" or env.MISE_SCOPE == "ci-pulumi-apply" %}
 env = ["proton-pass", "fnox", "github-iac"]
-{% elif target == "ci-renovate" %}
+{% elif env.MISE_SCOPE == "ci-renovate" %}
 env = ["proton-pass", "fnox", "github-app-ci-renovate"]
-{% elif target == "ci-release-please" %}
+{% elif env.MISE_SCOPE == "ci-release-please" %}
 env = ["proton-pass", "fnox", "github-app-ci-release-please"]
 {% else %}
 env = [
