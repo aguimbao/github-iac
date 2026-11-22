@@ -57,6 +57,11 @@
       "matchDatasources": ["custom.apk-wolfi"]
     },
     {
+      "matchDatasources": ["custom.apk-wolfi"],
+      "matchPackageNames": ["libstdc++"],
+      "fetchChangeLogs": "off"
+    },
+    {
       "groupName": "github actions",
       "matchManagers": ["github-actions"]
     }
