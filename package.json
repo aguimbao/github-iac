@@ -4,12 +4,12 @@
   "private": true,
   "type": "module",
   "dependencies": {
-    "@pulumi/github": "^6.7.0",
-    "@pulumi/pulumi": "^3.153.0"
+    "@pulumi/github": "^6.15.1",
+    "@pulumi/pulumi": "^3.277.0"
   },
   "devDependencies": {
-    "@types/node": "^24.0.0",
-    "tsx": "^4.23.12",
-    "typescript": "^5.8.0"
+    "@types/node": "^24.19.2",
+    "tsx": "^4.23.15",
+    "typescript": "^5.9.3"
   }
 }

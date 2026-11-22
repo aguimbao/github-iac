@@ -8,8 +8,7 @@
     ":semanticPrefixChore",
     ":semanticCommitScope(deps)"
   ],
-  "dependencyDashboard": true,
-  "dependencyDashboardAutoclose": true,
+  "dependencyDashboard": { "enabled": true, "autoclose": true },
   "prHourlyLimit": 0,
   "prConcurrentLimit": 0,
   "labels": ["dependencies"],
@@ -56,6 +55,11 @@
     {
       "groupName": "wolfi packages",
       "matchDatasources": ["custom.apk-wolfi"]
+    },
+    {
+      "matchDatasources": ["custom.apk-wolfi"],
+      "matchPackageNames": ["libstdc++"],
+      "fetchChangeLogs": "off"
     },
     {
       "groupName": "github actions",
