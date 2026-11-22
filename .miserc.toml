@@ -1,17 +1,9 @@
-{% if env.MISE_SCOPE == "ci-lint" %}
-env = ["lint"]
-{% elif env.MISE_SCOPE == "ci-pulumi-preview" or env.MISE_SCOPE == "ci-pulumi-apply" %}
-env = ["proton-pass", "fnox", "github-iac"]
-{% elif env.MISE_SCOPE == "ci-renovate" %}
-env = ["proton-pass", "fnox", "github-app-ci-renovate"]
-{% elif env.MISE_SCOPE == "ci-release-please" %}
-env = ["proton-pass", "fnox", "github-app-ci-release-please"]
-{% else %}
-env = [
-  "proton-pass",
-  "fnox",
-  "lint",
-  "github-iac",
-  "dev",
-]
-{% endif %}
+env = ['dev']
+
+[env_sets]
+dev = ['proton-pass', 'fnox', 'lint', 'github-iac', 'dev']
+ci-lint = ['lint']
+ci-pulumi-preview = ['proton-pass', 'fnox', 'github-iac']
+ci-pulumi-apply = ['proton-pass', 'fnox', 'github-iac']
+ci-renovate = ['proton-pass', 'fnox', 'github-app-ci-renovate']
+ci-release-please = ['proton-pass', 'fnox', 'github-app-ci-release-please']

@@ -21,7 +21,7 @@ jobs:
     outputs:
       has-changes: ${{ steps.has-changes.outputs.has-changes }}
     env:
-      MISE_SCOPE: 'ci-pulumi-preview'
+      MISE_ENV: 'ci-pulumi-preview'
       PROTON_PASS_PERSONAL_ACCESS_TOKEN: ${{ secrets.PROTON_PASS_PERSONAL_ACCESS_TOKEN }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -120,7 +120,7 @@ jobs:
     permissions:
       contents: read
     env:
-      MISE_SCOPE: 'ci-pulumi-apply'
+      MISE_ENV: 'ci-pulumi-apply'
       PROTON_PASS_PERSONAL_ACCESS_TOKEN: ${{ secrets.PROTON_PASS_PERSONAL_ACCESS_TOKEN }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
