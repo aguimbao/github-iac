@@ -498,9 +498,9 @@ backend = "npm:markdownlint-cli2"
 specifiers = ["0.24.2"]
 
 [[tools."npm:renovate"]]
-version = "44.257.9"
+version = "44.258.1"
 backend = "npm:renovate"
-specifiers = ["44.257.9"]
+specifiers = ["44.258.1"]
 
 [tools."npm:renovate".options]
 bun_args = "--trust"
